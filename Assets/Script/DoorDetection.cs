@@ -6,7 +6,7 @@ public class DoorDetection : MonoBehaviour
     {
         foreach (DoorManager door in GetComponentsInChildren<DoorManager>())
         {
-            door.ChangeWay(true);
+            door.ChangeWay();
         }
     }
 
@@ -14,7 +14,7 @@ public class DoorDetection : MonoBehaviour
     {
         foreach (DoorManager door in GetComponentsInChildren<DoorManager>())
         {
-            door.ChangeWay(false);
+            door.ChangeWay();
         }
     }
 }
