@@ -1,38 +1,91 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DoorManager : MonoBehaviour
 {
-    public bool way;
+    [Header("Doors")]
+    public GameObject leftDoor;
+    public GameObject rightDoor;
 
-    private float moveDistance = 2.67f;
+    [Header("Lights")]
+    public List<GameObject> lights;
+    public Material openColor;
+    public Material closedColor;
+
+
+    private float moveDistance = 1.8f;
     private float speed = 1f;
-    private Vector3 initialPosition;
+
+
+    private Vector3 leftClosedPos;
+    private Vector3 leftOpenPos;
+    private Vector3 rightClosedPos;
+    private Vector3 rightOpenPos;
+
+
+    private Coroutine leftCoroutine;
+    private Coroutine rightCoroutine;
 
     void Start()
     {
-        initialPosition = transform.localPosition;
+        leftClosedPos = leftDoor.transform.localPosition;
+        rightClosedPos = rightDoor.transform.localPosition;
+
+
+        leftOpenPos = leftClosedPos + Vector3.left * moveDistance;   
+        rightOpenPos = rightClosedPos + Vector3.right * moveDistance;
     }
 
-
-    IEnumerator MoveDoor(float direction)
+    private void OnTriggerEnter(Collider other)
     {
-        Vector3 targetPosition = initialPosition + Vector3.right * moveDistance * direction;
-
-        while (Vector3.Distance(transform.localPosition, targetPosition) > 0.01f)
+        ChangeWay(true);
+        foreach (var light in lights)
         {
-            transform.localPosition = Vector3.MoveTowards(transform.localPosition, targetPosition, speed * Time.deltaTime);
+            var renderer = light.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.material = openColor;
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        ChangeWay(false);
+        foreach (var light in lights)
+        {
+            var renderer = light.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.material = closedColor;
+            }
+        }
+    }
+
+    private void ChangeWay(bool isOpen)
+    {
+        if (leftCoroutine != null) 
+        {
+            StopCoroutine(leftCoroutine); 
+        }
+        if (rightCoroutine != null) 
+        {
+            StopCoroutine(rightCoroutine); 
+        }
+
+        leftCoroutine = StartCoroutine(MoveDoor(leftDoor.transform, isOpen ? leftOpenPos : leftClosedPos));
+        rightCoroutine = StartCoroutine(MoveDoor(rightDoor.transform, isOpen ? rightOpenPos : rightClosedPos));
+    }
+
+    private IEnumerator MoveDoor(Transform door, Vector3 targetPos)
+    {
+        while (Vector3.Distance(door.localPosition, targetPos) > 0.01f)
+        {
+            door.localPosition = Vector3.MoveTowards(door.localPosition, targetPos, speed * Time.deltaTime);
             yield return null;
         }
 
-        initialPosition = transform.localPosition;
-    }
-
-
-
-    public void ChangeWay()
-    {
-        way = !way;
-        StartCoroutine(MoveDoor(way ? 1f : -1f));
+        door.localPosition = targetPos; 
     }
 }
