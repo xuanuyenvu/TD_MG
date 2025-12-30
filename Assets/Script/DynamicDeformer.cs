@@ -17,8 +17,8 @@ public class DynamicDeformer : MonoBehaviour
     private float duration = 7f;
 
     [Header("Sculpt (souris)")]
-    public float radius = 0.25f;
-    public float strength = 0.02f;
+    public float radius = 0.2f;
+    public float strength = 0.01f;
 
     [Header("Buttons")]
     public GameObject performanceBtn;
@@ -35,6 +35,7 @@ public class DynamicDeformer : MonoBehaviour
 
     bool isPerformanceMode = false;
     Coroutine performanceCoroutine;
+    bool isResetNeeded = false;
 
     void Awake()
     {
@@ -89,36 +90,42 @@ public class DynamicDeformer : MonoBehaviour
         }
     }
 
-    void SculptInput() 
-    { 
-        if (Input.GetMouseButton(0) && Camera.main) 
-        { 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); 
-            if (Physics.Raycast(ray, out var hit, 1000f)) 
-            { 
-                // Sens : clic gauche = pousser, SHIFT+clic gauche = tirer 
-                float dir = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) ? -1f : 1f; 
- 
-                // Centre et normale au point d'impact (espace monde) 
-                Vector3 center = hit.point; 
-                Vector3 pushN  = hit.normal * dir; 
- 
-                // Appliquer une bosse/creux gaussienne dans un rayon donné 
-                for (int i = 0; i < _workVerts.Length; i++) 
-                { 
-                    Vector3 worldPos = transform.TransformPoint(_workVerts[i]); 
-                    float d = Vector3.Distance(worldPos, center); 
-                    if (d < radius) 
-                    { 
-                        float w = Mathf.Exp(-(d * d) / (2f * radius * radius)); // gaussienne 
-                        worldPos += pushN * (strength * w); 
-                        _workVerts[i] = transform.InverseTransformPoint(worldPos); 
-                    } 
-                } 
-                _meshColliderDirty = true; // on réactualisera plus tard 
-            } 
-        } 
-    } 
+    void SculptInput()
+    {
+        if (Input.GetMouseButton(0) && Camera.main)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out var hit, 1000f))
+            {
+                // Sens : clic gauche = pousser, SHIFT+clic gauche = tirer
+                float dir = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) ? -1f : 1f;
+                // Centre et normale au point d'impact (espace monde)
+                Vector3 center = hit.point;
+                Vector3 pushN = hit.normal * dir;
+                // Appliquer une bosse/creux gaussienne dans un rayon donn
+                for (int i = 0; i < _workVerts.Length; i++)
+                {
+                    Vector3 worldPos = transform.TransformPoint(_workVerts[i]);
+                    float d = Vector3.Distance(worldPos, center);
+                    if (d < radius)
+                    {
+                        float w = Mathf.Exp(-(d * d) / (2f * radius * radius)); // gaussienne
+                        worldPos += pushN * (strength * w);
+                        _workVerts[i] = transform.InverseTransformPoint(worldPos);
+                    }
+                }
+
+                _mesh.vertices = _workVerts;
+                _mesh.RecalculateNormals();
+                _mesh.RecalculateBounds();
+
+                _meshColliderDirty = true; // on ractualisera plus tard
+
+                isResetNeeded = true;
+                UpdateResetButton();
+            }
+        }
+    }
 
     public void ChangeMode(bool _isPerformance)
     {
@@ -187,6 +194,24 @@ public class DynamicDeformer : MonoBehaviour
     private void UpdatePerformanceCountdown(float timeLeft, TextMeshProUGUI performanceText)
     {
         performanceText.text =
-            $"<size=60%>MODE</size>\nPerformance\n<size=55%>Time left:{timeLeft:0.0}s</size>";
+            $"<size=60%>MODE</size>\nPerformance\n<size=55%>Time left: {timeLeft:0.0}s</size>";
+    }
+
+    public void ResetMesh()
+    {
+        if (!isResetNeeded) return;
+        
+        _workVerts = (Vector3[])_baseVerts.Clone();
+        _baseVerts = (Vector3[])_baseVerts.Clone();
+        _mesh.RecalculateNormals();
+        _meshColliderDirty = true;
+
+        isResetNeeded = false;
+        UpdateResetButton();
+    }
+
+    private void UpdateResetButton()
+    {
+        resetBtn.GetComponentInChildren<TextMeshProUGUI>().text = isResetNeeded ? "Reset" : "Touch and sculpt!";
     }
 }
