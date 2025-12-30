@@ -1,16 +1,28 @@
 using UnityEngine; 
-using System;
+using System.Collections;
+using TMPro;
+using UnityEngine.UI;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class DynamicDeformer : MonoBehaviour
 {
     public enum Mode { SineBreathing, SculptWithMouse }
     public Mode mode = Mode.SineBreathing;
     [Header("Sine (respiration)")]
-    public float amplitude = 0.01f;
-    public float frequency = 1.0f;
+    public float amplitude = 0.00008f;
+    public float frequency = 0.8f;
+    private float normalAmplitude = 0.00008f;
+    private float normalFrequency = 0.6f;
+    private float performanceAmplitude = 0.0006f;
+    private float performanceFrequency = 1.5f;
+    private float duration = 7f;
+
     [Header("Sculpt (souris)")]
     public float radius = 0.25f;
     public float strength = 0.02f;
+
+    [Header("Buttons")]
+    public GameObject performanceBtn;
+    public GameObject resetBtn;
     // en mètres le long de la normale 
     // Hz 
     // m 
@@ -20,6 +32,9 @@ public class DynamicDeformer : MonoBehaviour
     Vector3[] _workVerts;     // buffer de travail 
     Vector3[] _baseNormals;   // normales de référence 
     bool _meshColliderDirty;
+
+    bool isPerformanceMode = false;
+    Coroutine performanceCoroutine;
 
     void Awake()
     {
@@ -104,4 +119,74 @@ public class DynamicDeformer : MonoBehaviour
             } 
         } 
     } 
+
+    public void ChangeMode(bool _isPerformance)
+    {
+        if (performanceCoroutine != null)
+        {
+            StopCoroutine(performanceCoroutine);
+            performanceCoroutine = null;
+        }
+
+        isPerformanceMode = _isPerformance;
+
+        if (isPerformanceMode)
+        {
+            SetPerformanceMode();
+        }
+        else
+        {
+            SetRespirationMode();
+        }
+    }
+
+    private void SetPerformanceMode()
+    {
+        TextMeshProUGUI performanceText = performanceBtn.GetComponentInChildren<TextMeshProUGUI>();
+
+        performanceText.text = "<size=60%>MODE</size>\nPerformance";
+        performanceCoroutine = StartCoroutine(PlayPerformanceMode(performanceText));
+    }
+
+    private void SetRespirationMode()
+    {
+        performanceBtn.GetComponentInChildren<TextMeshProUGUI>().text = "<size=60%>MODE</size>\nRespiration\n";
+        amplitude = normalAmplitude;
+        frequency = normalFrequency;
+    }
+
+    private IEnumerator PlayPerformanceMode(TextMeshProUGUI performanceText)
+    {
+        float startAmplitude = amplitude;
+        float startFrequency = frequency;
+
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+
+            amplitude = Mathf.Lerp(startAmplitude, performanceAmplitude, t);
+            frequency = Mathf.Lerp(startFrequency, performanceFrequency, t);
+
+            UpdatePerformanceCountdown(duration - elapsed, performanceText);
+            yield return null;
+        }
+
+        amplitude = performanceAmplitude;
+        frequency = performanceFrequency;
+
+        yield return new WaitForSeconds(0.5f);
+
+        isPerformanceMode = false;
+        performanceCoroutine = null;
+        SetRespirationMode();
+    }
+
+    private void UpdatePerformanceCountdown(float timeLeft, TextMeshProUGUI performanceText)
+    {
+        performanceText.text =
+            $"<size=60%>MODE</size>\nPerformance\n<size=55%>Time left:{timeLeft:0.0}s</size>";
+    }
 }
