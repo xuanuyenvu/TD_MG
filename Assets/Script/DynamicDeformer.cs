@@ -212,6 +212,6 @@ public class DynamicDeformer : MonoBehaviour
 
     private void UpdateResetButton()
     {
-        resetBtn.GetComponentInChildren<TextMeshProUGUI>().text = isResetNeeded ? "Reset" : "Touch and sculpt!";
+        resetBtn.GetComponentInChildren<TextMeshProUGUI>().text = isResetNeeded ? "Reset" : "<size=70%>Touch the statue and sculpt!</size>";
     }
 }
