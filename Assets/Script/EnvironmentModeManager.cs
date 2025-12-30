@@ -73,7 +73,7 @@ public class EnvironmentModeManager : MonoBehaviour
         if (audioSource.clip != calmMusic)
         {
             audioSource.clip = calmMusic;
-            audioSource.volume = 0.3f;
+            audioSource.volume = 1f;
             audioSource.Play();
         }
     }
