@@ -112,6 +112,9 @@ public class DynamicDeformer : MonoBehaviour
                         float w = Mathf.Exp(-(d * d) / (2f * radius * radius)); // gaussienne
                         worldPos += pushN * (strength * w);
                         _workVerts[i] = transform.InverseTransformPoint(worldPos);
+
+                        isResetNeeded = true;
+                        UpdateResetButton();
                     }
                 }
 
@@ -120,9 +123,6 @@ public class DynamicDeformer : MonoBehaviour
                 _mesh.RecalculateBounds();
 
                 _meshColliderDirty = true; // on ractualisera plus tard
-
-                isResetNeeded = true;
-                UpdateResetButton();
             }
         }
     }
