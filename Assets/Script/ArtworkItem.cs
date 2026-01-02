@@ -11,24 +11,77 @@ public class ArtworkItem : MonoBehaviour
     [TextArea(3,10)]  
     [SerializeField] private string artworkDescription;
 
+    private Dictionary<Renderer, Material[]> originalMaterials = new();
+    private bool isActive = false;
+    public bool wantActive = false;
+
     void Start()
     {
+        particle.Stop();
+        foreach (var r in renderers)
+        {
+            originalMaterials[r] = r.materials;
+        }
+
         description.GetComponentInChildren<TextMeshProUGUI>().text = artworkDescription;
     }
 
-    public void SetFresnelEnabled(bool enabled)
+    void Update()
     {
-        foreach (Renderer rend in renderers)
+        if (wantActive)
         {
-            Material[] materials = rend.materials;
-            for (int i = 0; i < materials.Length; i++)
+            SetActiveArtwork(true);
+        }
+        else
+        {
+            SetActiveArtwork(false);
+        }
+    }
+
+   public void SetActiveArtwork(bool active)
+    {
+        if (isActive == active) return; 
+
+        isActive = active;
+
+        if (isActive)
+            ActiveArtwork();
+        else
+            DeactiveArtwork();
+    }
+
+    public void ActiveArtwork()
+    {
+        particle.Play();
+        description.SetActive(true);
+        ActiverHighlight();
+    }
+
+    public void DeactiveArtwork()
+    {
+        particle.Stop();
+        description.SetActive(false);
+        DesactiverHighlight();
+    }
+
+    private void ActiverHighlight()
+    {
+        foreach (var r in renderers)
+        {
+            var mats = new List<Material>(originalMaterials[r]);
+            if (fresnelMaterial != null)
             {
-                if (materials[i].name.Contains("Fresnel"))
-                {
-                    materials[i] = enabled ? fresnelMaterial : rend.sharedMaterials[i];
-                }
+                mats.Add(fresnelMaterial);
             }
-            rend.materials = materials;
+            r.materials = mats.ToArray();
+        }
+    }
+
+    private void DesactiverHighlight()
+    {
+        foreach (var r in renderers)
+        {
+            r.materials = originalMaterials[r]; 
         }
     }
 }

@@ -972,7 +972,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 12
+      scalar: 19
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -5124,6 +5124,7 @@ MonoBehaviour:
   fresnelMaterial: {fileID: -876546973899608171, guid: cb82da1077ffb1744a6c3f365cbdbaaa, type: 3}
   description: {fileID: 2367403378631412539}
   artworkDescription: 
+  wantActive: 0
 --- !u!1 &6543335844543816052
 GameObject:
   m_ObjectHideFlags: 0
