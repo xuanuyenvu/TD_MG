@@ -17,25 +17,26 @@ public class ArtworkItem : MonoBehaviour
 
     void Start()
     {
-        particle.Stop();
+        description.GetComponentInChildren<TextMeshProUGUI>().text = artworkDescription;
         foreach (var r in renderers)
         {
             originalMaterials[r] = r.materials;
         }
 
-        description.GetComponentInChildren<TextMeshProUGUI>().text = artworkDescription;
+        particle.Stop();
+        description.SetActive(false);
     }
 
     void Update()
     {
-        if (wantActive)
-        {
-            SetActiveArtwork(true);
-        }
-        else
-        {
-            SetActiveArtwork(false);
-        }
+        // if (wantActive)
+        // {
+        //     SetActiveArtwork(true);
+        // }
+        // else
+        // {
+        //     SetActiveArtwork(false);
+        // }
     }
 
    public void SetActiveArtwork(bool active)
