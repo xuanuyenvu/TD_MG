@@ -5,10 +5,12 @@ using TMPro;
 public class VisitModeManager : MonoBehaviour
 {
     public GameObject btn;
+    public GameObject artworkButtons;
     private NPCManager npcManager;
 
-    public bool IsVisiteGuidee { get; private set; } = false;
+    private bool IsVisiteGuidee = false;
     private TextMeshProUGUI btnText;
+
 
     void Start()
     {
@@ -45,6 +47,7 @@ public class VisitModeManager : MonoBehaviour
 
     private void SetVisiteLibre()
     {
+        artworkButtons.SetActive(true);
         btnText.text = "Visite libre";
         PlayerPrefs.SetInt("VisitMode", 0);
         PlayerPrefs.Save();
@@ -52,6 +55,7 @@ public class VisitModeManager : MonoBehaviour
 
     private void SetVisiteGuidee()
     {
+        artworkButtons.SetActive(false);
         btnText.text = "Visite guidée\npar PNJ";
         PlayerPrefs.SetInt("VisitMode", 1);
         PlayerPrefs.Save();

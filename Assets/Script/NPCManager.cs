@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
@@ -31,6 +32,7 @@ public class NPCManager : MonoBehaviour
     public NPCState currentState = NPCState.Idle;
     public bool isProcessingArtwork = false;
     public bool isStopped = false;
+    private bool isRotating = false;
 
     void Awake()
     {
@@ -48,19 +50,19 @@ public class NPCManager : MonoBehaviour
     void Update()
     {
         if (isProcessingArtwork) return;
+
+        if (isStopped && agent.isStopped) 
+        {
+            agent.isStopped = false;
+            text.text = "";
+        }
         
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        // if (currentState == NPCState.Bravo && !isProcessingArtwork)
-        // {
-        //     ArtworkManager.instance.NextArtwork();
-        //     Debug.Log("index after bravo: " + ArtworkManager.instance.currentIndex);
-        //     MoveToNextArtwork();
-        // }
-        if (currentState == NPCState.Walk && !isStopped)
+        if (currentState == NPCState.Walk)
         {
 
-            if (distanceToPlayer > maxDistanceNPCandPlayer)
+            if (distanceToPlayer > maxDistanceNPCandPlayer && !isStopped)
             {
                 agent.isStopped = true;
                 animator.SetFloat("speed", 0f);
@@ -78,21 +80,28 @@ public class NPCManager : MonoBehaviour
         }
         
         
-        if (currentState == NPCState.Bravo)
+        if (currentState == NPCState.Bravo && !isStopped)
         {
+            Debug.Log("index: " + ArtworkManager.instance.currentIndex);
+            if (ArtworkManager.instance.currentIndex == ArtworkManager.instance.totalArtworks - 1)
+            {
+                Debug.Log("End of the tour");
+                StopGuidedTour();
+                return;
+            }
             ArtworkManager.instance.NextArtwork();
             MoveToNextArtwork();
         }
         else if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance 
-            && Vector3.Distance(transform.position, initialPosition) > 1f)
+            && Vector3.Distance(transform.position, initialPosition) > 5f && !isStopped)
         {
             StartCoroutine(ArtworkSequence());
         }
 
-        // if (currentState == NPCState.Bravo && distanceToPlayer < maxDistanceNPCandPlayer)
-        // {
-
-        // }
+        if (isRotating)
+        {
+            RotateTowards(ArtworkManager.instance.GetArtworkRotation(ArtworkManager.instance.currentIndex));
+        }
     }
 
     public void StartGuidedTour()
@@ -125,6 +134,7 @@ public class NPCManager : MonoBehaviour
     {
         currentState = NPCState.Walk;
         isStopped = false;
+        isRotating = true;
         text.text = "";
 
         Vector3 nextArtworkPosition = ArtworkManager.instance.GetArtworkPosition(ArtworkManager.instance.currentIndex);
@@ -144,17 +154,15 @@ public class NPCManager : MonoBehaviour
         if (isProcessingArtwork) yield break;
         isProcessingArtwork = true;
 
-        animator.SetFloat("speed", 0f);
         agent.isStopped = true;
+        animator.SetFloat("speed", 0f);
         yield return new WaitForSeconds(1f);
-
-        RotateTowards(ArtworkManager.instance.GetArtworkPosition(ArtworkManager.instance.currentIndex));
 
         // thinking
         currentState = NPCState.Think;
         animator.SetBool("isThinking", true);
         animator.SetBool("isBravo", false);
-        text.text = artworkDescription[Random.Range(0, artworkDescription.Count)];
+        text.text = artworkDescription[UnityEngine.Random.Range(0, artworkDescription.Count)];
         yield return new WaitForSeconds(6f);
 
         // bravo
@@ -167,22 +175,29 @@ public class NPCManager : MonoBehaviour
         animator.SetBool("isBravo", false);
         text.text = "";
         agent.isStopped = false;
-        animator.SetFloat("speed", agent.velocity.magnitude);
-
         isProcessingArtwork = false;
+        yield return new WaitForSeconds(1f);
+
+        animator.SetFloat("speed", agent.velocity.magnitude);
     }
+    public float angleRotationSpeed = 30;
 
     private void RotateTowards(Vector3 targetPosition)
     {
+        Debug.Log("Rotating towards artwork");
         Vector3 direction = (targetPosition - transform.position).normalized;
-        direction.y = 0f; 
 
-        if (direction.magnitude > 0.1f)
+        if (Math.Abs(Vector3.Dot(transform.forward, direction)) < 0.99f)
         {
-            Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+            transform.rotation = Quaternion.Slerp(transform.rotation,
+                Quaternion.LookRotation(direction, Vector3.up),
+                Time.deltaTime * angleRotationSpeed
+            );
+        }
 
+        if (Math.Abs(Vector3.Dot(transform.forward, direction)) >= 0.99f)
+        {
+            isRotating = false;
         }
     }
-
 }

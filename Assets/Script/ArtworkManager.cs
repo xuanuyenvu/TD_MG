@@ -9,6 +9,7 @@ public class ArtworkManager : MonoBehaviour
     [SerializeField] private Button previousBtn;
     [SerializeField] private Button nextBtn;
     private GameObject player;
+    public int totalArtworks { get { return artworkItems.Count; } }
 
     public int currentIndex { get; private set; } = 0;
 
