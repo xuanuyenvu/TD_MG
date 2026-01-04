@@ -4,32 +4,21 @@ using TMPro;
 
 public class VisitModeManager : MonoBehaviour
 {
-    public static VisitModeManager instance;
     public GameObject btn;
+    private NPCManager npcManager;
 
     public bool IsVisiteGuidee { get; private set; } = false;
     private TextMeshProUGUI btnText;
 
-    void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
     void Start()
     {
+        npcManager = FindFirstObjectByType<NPCManager>();
         btnText = btn.GetComponentInChildren<TextMeshProUGUI>();
         IsVisiteGuidee = GetVisitMode() == 1;
 
         if (IsVisiteGuidee)
         {
+            npcManager.StartGuidedTour();
             SetVisiteGuidee();
         }
         else
@@ -44,10 +33,12 @@ public class VisitModeManager : MonoBehaviour
 
         if (IsVisiteGuidee)
         {
+            npcManager.StartGuidedTour();
             SetVisiteGuidee();
         }
         else
         {
+            npcManager.StopGuidedTour();
             SetVisiteLibre();
         }
     }

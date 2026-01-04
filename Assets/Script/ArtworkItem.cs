@@ -85,4 +85,14 @@ public class ArtworkItem : MonoBehaviour
             r.materials = originalMaterials[r]; 
         }
     }
+
+    public Vector3 GetPosition()
+    {
+        return transform.Find("NPC").transform.position;
+    }
+
+    public Vector3 GetRotation()
+    {
+        return transform.Find("NPC").transform.eulerAngles;
+    }
 }

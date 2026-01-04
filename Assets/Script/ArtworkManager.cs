@@ -4,12 +4,26 @@ using UnityEngine.UI;
 
 public class ArtworkManager : MonoBehaviour
 {
+    public static ArtworkManager instance;
     [SerializeField] private List<ArtworkItem> artworkItems;
     [SerializeField] private Button previousBtn;
     [SerializeField] private Button nextBtn;
     private GameObject player;
 
-    private int currentIndex = 0;
+    public int currentIndex { get; private set; } = 0;
+
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {
@@ -57,4 +71,23 @@ public class ArtworkManager : MonoBehaviour
         nextBtn.interactable = currentIndex < artworkItems.Count - 1;
     }
 
+    public Vector3 GetArtworkPosition(int index)
+    {
+        if (index < 0 || index >= artworkItems.Count) return Vector3.zero;
+        return artworkItems[index].GetPosition();
+    }
+
+    public Vector3 GetArtworkRotation(int index)
+    {
+        if (index < 0 || index >= artworkItems.Count) return Vector3.zero;
+        return artworkItems[index].GetRotation();
+    }
+
+    public void ResetTour()
+    {
+        artworkItems[currentIndex].SetActiveArtwork(false);
+        currentIndex = 0;
+        artworkItems[currentIndex].SetActiveArtwork(true);
+        UpdateStateButtons();
+    }
 }

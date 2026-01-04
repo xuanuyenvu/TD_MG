@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DoorManager : MonoBehaviour
@@ -27,6 +28,8 @@ public class DoorManager : MonoBehaviour
     private Coroutine leftCoroutine;
     private Coroutine rightCoroutine;
 
+    private int open = 0;
+
     void Start()
     {
         leftClosedPos = leftDoor.transform.localPosition;
@@ -39,26 +42,34 @@ public class DoorManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        ChangeWay(true);
-        foreach (var light in lights)
+        open++;
+        if (open > 0)
         {
-            var renderer = light.GetComponent<Renderer>();
-            if (renderer != null)
+            ChangeWay(true);
+            foreach (var light in lights)
             {
-                renderer.material = openColor;
+                var renderer = light.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    renderer.material = openColor;
+                }
             }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        ChangeWay(false);
-        foreach (var light in lights)
+        open--;
+        if (open <= 0)
         {
-            var renderer = light.GetComponent<Renderer>();
-            if (renderer != null)
+            ChangeWay(false);
+            foreach (var light in lights)
             {
-                renderer.material = closedColor;
+                var renderer = light.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    renderer.material = closedColor;
+                }
             }
         }
     }
