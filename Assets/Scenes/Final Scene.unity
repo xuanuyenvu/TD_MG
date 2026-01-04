@@ -23104,6 +23104,70 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7700530055602534384, guid: 2b54a940398fe5947a2b29b04d7992a0, type: 3}
   m_PrefabInstance: {fileID: 1772412716}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1774214529
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1774214531}
+  - component: {fileID: 1774214530}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1774214530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774214529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: 8548ae7fb5b7cc4409d16167830d5984, type: 2}
+  m_BuildHeightMesh: 0
+--- !u!4 &1774214531
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774214529}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1774614224 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1818779265075333285, guid: 9bb5d1049ae521e4fa10ec7dbba63ac4, type: 3}
@@ -23847,9 +23911,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45689171e998ee147b321ae5294b0a01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 0}
+  text: {fileID: 222735370}
   artworkDescription:
   - 
+--- !u!114 &1816973434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421704270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9476b914899eabd4a9c58bd59ba12c05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1139453627}
+--- !u!195 &1816973435
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421704270}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &1818227249
 GameObject:
   m_ObjectHideFlags: 0
@@ -25924,14 +26023,7 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 9379dcbd531cc8648986079e47adfe89, type: 2}
     - target: {fileID: 5866666021909216657, guid: 6861a7b88ef8a7f4a9b8463f9152f84b, type: 3}
       propertyPath: m_WarningMessage
-      value: "\nBinding warning: Some generic clip(s) animate transforms that are
-        already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'mixamorig1:Hips'\n\tTransform 'mixamorig1:LeftHandThumb1'\n\tTransform
-        'mixamorig1:LeftHandPinky2'\n\tTransform 'mixamorig1:RightHand'\n\tTransform
-        'mixamorig1:LeftHandMiddle2'\n\tTransform 'mixamorig1:RightFoot'\n\tTransform
-        'mixamorig1:Spine1'\n\tTransform 'mixamorig1:RightLeg'\n\tTransform 'mixamorig1:RightHandMiddle2'\n\tTransform
-        'mixamorig1:Hips'\n\tand more ...\n\tFrom animation clip 'mixamo.com'\n\tFrom
-        animation clip 'mixamo.com'"
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -25943,6 +26035,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6861a7b88ef8a7f4a9b8463f9152f84b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1816973433}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6861a7b88ef8a7f4a9b8463f9152f84b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1816973435}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6861a7b88ef8a7f4a9b8463f9152f84b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1816973434}
   m_SourcePrefab: {fileID: 100100000, guid: 6861a7b88ef8a7f4a9b8463f9152f84b, type: 3}
 --- !u!4 &1983227923 stripped
 Transform:
@@ -29066,6 +29164,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1774214531}
   - {fileID: 1776065715}
   - {fileID: 639962150}
   - {fileID: 985570692}
