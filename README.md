@@ -10,7 +10,7 @@ Ce projet contient **deux scènes principales** :
 - **Premier Scene** : scène de TD
 
 Dans la **Final Scene**, l’ensemble des fonctionnalités a été organisé par tâche.
-![Hierarchy](Img_RM/hierarchy.png)
+![Hierarchy](Img_RM/hierachy.png)
 
 
 ## 1. Tâche 1
