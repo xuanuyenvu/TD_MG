@@ -23973,19 +23973,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 222735370}
-  animator: {fileID: 0}
   artworkDescription:
   - I love the colors and composition
   - "There\u2019s so much emotion in this work"
   - What a stunning piece!
   - Notice the subtle use of light and shadow
   - Look at the intricate details
+  - It really makes you think
+  - The craftsmanship is impressive
+  - Take a moment to admire this one
+  - The textures are beautifully done
   waitingMessage: "I\u2019m waiting for you here!"
   startMessage: Follow me!
-  currentState: 0
-  isProcessingArtwork: 0
-  isStopped: 0
-  angleRotationSpeed: 30
 --- !u!195 &1816973435
 NavMeshAgent:
   m_ObjectHideFlags: 0
