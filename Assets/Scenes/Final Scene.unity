@@ -164,6 +164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   btn: {fileID: 1203859736}
+  artworkButtons: {fileID: 486428459}
 --- !u!1001 &4106452
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23981,6 +23982,10 @@ MonoBehaviour:
   - Look at the intricate details
   waitingMessage: "I\u2019m waiting for you here!"
   startMessage: Follow me!
+  currentState: 0
+  isProcessingArtwork: 0
+  isStopped: 0
+  angleRotationSpeed: 30
 --- !u!195 &1816973435
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -23990,8 +23995,8 @@ NavMeshAgent:
   m_GameObject: {fileID: 1421704270}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
+  m_Radius: 0.3
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120

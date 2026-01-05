@@ -4,6 +4,7 @@ using TMPro;
 using System.Collections.Generic;
 using UnityEngine.AI;
 using System.Collections;
+using UnityEngine.UIElements;
 
 public enum NPCState
 {
@@ -19,7 +20,7 @@ public class NPCManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI text;
     private NavMeshAgent agent;
     private Transform player;
-    public Animator animator;
+    private Animator animator;
 
     [TextArea(3, 10)]
     [SerializeField] private List<string> artworkDescription;
@@ -29,9 +30,9 @@ public class NPCManager : MonoBehaviour
     private Vector3 initialPosition;
     private float maxDistanceNPCandPlayer = 4.3f;
     private float minDistanceNPCandPlayer = 1.3f;
-    public NPCState currentState = NPCState.Idle;
-    public bool isProcessingArtwork = false;
-    public bool isStopped = false;
+    private NPCState currentState = NPCState.Idle;
+    private bool isProcessingArtwork = false;
+    private bool isStopped = false;
     private bool isRotating = false;
 
     void Awake()
@@ -49,13 +50,23 @@ public class NPCManager : MonoBehaviour
     }
     void Update()
     {
-        if (isProcessingArtwork) return;
+        if (isProcessingArtwork)
+        {
+            if (isRotating)
+            {
+                
+                RotateTowardsEuler(ArtworkManager.instance.GetArtworkRotation(ArtworkManager.instance.currentIndex));
+            }
+            return;
+        }
 
         if (isStopped && agent.isStopped) 
         {
             agent.isStopped = false;
             text.text = "";
         }
+
+
         
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
@@ -82,10 +93,8 @@ public class NPCManager : MonoBehaviour
         
         if (currentState == NPCState.Bravo && !isStopped)
         {
-            Debug.Log("index: " + ArtworkManager.instance.currentIndex);
             if (ArtworkManager.instance.currentIndex == ArtworkManager.instance.totalArtworks - 1)
             {
-                Debug.Log("End of the tour");
                 StopGuidedTour();
                 return;
             }
@@ -96,11 +105,6 @@ public class NPCManager : MonoBehaviour
             && Vector3.Distance(transform.position, initialPosition) > 5f && !isStopped)
         {
             StartCoroutine(ArtworkSequence());
-        }
-
-        if (isRotating)
-        {
-            RotateTowards(ArtworkManager.instance.GetArtworkRotation(ArtworkManager.instance.currentIndex));
         }
     }
 
@@ -124,7 +128,7 @@ public class NPCManager : MonoBehaviour
     public void StopGuidedTour()
     {
         isStopped = true;
-        Debug.Log("Stop Guided Tour");
+
         currentState = NPCState.Walk;
         agent.SetDestination(initialPosition);
         ArtworkManager.instance.ResetTour();
@@ -134,7 +138,7 @@ public class NPCManager : MonoBehaviour
     {
         currentState = NPCState.Walk;
         isStopped = false;
-        isRotating = true;
+        // isRotating = true;
         text.text = "";
 
         Vector3 nextArtworkPosition = ArtworkManager.instance.GetArtworkPosition(ArtworkManager.instance.currentIndex);
@@ -156,7 +160,10 @@ public class NPCManager : MonoBehaviour
 
         agent.isStopped = true;
         animator.SetFloat("speed", 0f);
+        isRotating = true;
+
         yield return new WaitForSeconds(1f);
+
 
         // thinking
         currentState = NPCState.Think;
@@ -180,24 +187,20 @@ public class NPCManager : MonoBehaviour
 
         animator.SetFloat("speed", agent.velocity.magnitude);
     }
-    public float angleRotationSpeed = 30;
 
-    private void RotateTowards(Vector3 targetPosition)
+private void RotateTowardsEuler(Vector3 targetEulerAngles)
+{
+    Quaternion targetRotation = Quaternion.Euler(targetEulerAngles);
+
+    // Mượt dần từ rotation hiện tại tới target
+    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+
+    // Kiểm tra gần tới target chưa
+    if (Quaternion.Angle(transform.rotation, targetRotation) < 1f)
     {
-        Debug.Log("Rotating towards artwork");
-        Vector3 direction = (targetPosition - transform.position).normalized;
-
-        if (Math.Abs(Vector3.Dot(transform.forward, direction)) < 0.99f)
-        {
-            transform.rotation = Quaternion.Slerp(transform.rotation,
-                Quaternion.LookRotation(direction, Vector3.up),
-                Time.deltaTime * angleRotationSpeed
-            );
-        }
-
-        if (Math.Abs(Vector3.Dot(transform.forward, direction)) >= 0.99f)
-        {
-            isRotating = false;
-        }
+        isRotating = false;
+        transform.rotation = targetRotation; // đảm bảo chính xác
     }
+}
+
 }
