@@ -1,8 +1,7 @@
 # Projet Unity – Exposition Interactive
 
 ## Démonstration
-Lien vidéo :  
-https://youtu.be/Afxc--FR4jo
+Lien vidéo :  https://youtu.be/Afxc--FR4jo
 
 ---
 
@@ -13,7 +12,7 @@ Ce projet contient **deux scènes principales** :
 - **Premier Scene** : scène de TD
 
 Dans la **Final Scene**, l’ensemble des fonctionnalités a été organisé par tâche.
-![Screenshot](/Img_RM/hierarchy.jpg)
+![Hierarchy](Img_RM/hierarchy.png)
 
 
 ## 1. Tâche 1
@@ -24,12 +23,12 @@ Le système de contrôle de l’ambiance comprend **deux modes** :
 - Mode Événement
 
 On peut changer de mode en **cliquant directement sur l’écran à l’aide de la souris**.  
-![Screenshot](/Img_RM/ambiance)
+![Screenshot](Img_RM/ambiance)
 
 #### 1.2 Interface de choix du mode de visite
 On peut aussi changer de mode en **cliquant directement sur l’écran à l’aide de la souris**. Après chaque changement, le mode sélectionné est **enregistré par PlayerPrefs**
 
-![Screenshot](/Img_RM/visite)
+![Screenshot](Img_RM/visite)
 
 ---
 
@@ -45,14 +44,14 @@ Un signal lumineux indique l’état de la porte :
 
 ### 3. Tâche 3 – Installation artistique interactive
 On peut interagir avec l’écran situé à côté de l’œuvre afin **d’activer le mode souhaité**
-![Screenshot](/Img_RM/oeuvreMan)
+![Screenshot](Img_RM/oeuvreMan)
 
 ---
 
 ### 4. Tâche 4 – Mode *Visite libre*
 
 Le **mode Visite libre** permet de se déplacer librement dans l’espace d’exposition et de **déclencher manuellement la présentation de chaque œuvre**.  
-![Screenshot](/Img_RM/expose)
+![Screenshot](Img_RM/expose)
 
 ---
 
