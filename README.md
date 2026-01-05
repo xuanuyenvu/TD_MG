@@ -1,5 +1,3 @@
-# Projet Unity – Exposition Interactive
-
 ## Démonstration
 Lien vidéo :  https://youtu.be/Afxc--FR4jo
 
